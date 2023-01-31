@@ -12,9 +12,11 @@ datasource db {
 
 //tabela
 model Habit {
-  id         String   @id @default(uuid()) //gerador de id único 
+  id         String          @id @default(uuid()) //gerador de id único 
   tittle     String
   created_at DateTime
+  dayHabits  DayHabit[]
+  weekDays   HabitWeekDays[]
 
   @@map("habits") //trocando nome
 }
@@ -24,13 +26,16 @@ model HabitWeekDays {
   habit_id String
   week_day Int
 
+  habit Habit @relation(fields: [habit_id], references: [id])
+
   @@unique([habit_id, week_day]) //o mesmo hábito só pode estar disponível uma vez no mesmo dia da semana
   @@map("habit_week_days")
 }
 
 model Day {
-  id   String   @id @default(uuid())
-  date DateTime
+  id        String     @id @default(uuid())
+  date      DateTime
+  dayHabits DayHabit[]
 
   @@unique([date]) //para que um dia não seja cadastrado mais de uma vez
   @@map("days")
@@ -41,6 +46,10 @@ model DayHabit {
 
   day_id   String
   habit_id String
+
+  //para colocar as relações foi utilizado o "format document", do próprio vscode
+  day   Day   @relation(fields: [day_id], references: [id])
+  habit Habit @relation(fields: [habit_id], references: [id])
 
   @@unique([day_id, habit_id]) //impossibilita de ter dias repetidos e hábitos repetidos
   @@map("day_habits")
