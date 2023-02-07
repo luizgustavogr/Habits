@@ -20,7 +20,7 @@ app.register(appRoutes)
 
 
 app.listen({ //fazer com que app "ouça" a porta 33333
-    port:3000,
+    port:5555,
 }).then(()=>{
     console.log("Running code...") //npm run dev
 })
